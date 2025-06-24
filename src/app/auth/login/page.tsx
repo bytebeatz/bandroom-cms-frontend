@@ -37,7 +37,7 @@ export default function LoginPage() {
 
         <input
           type="email"
-          placeholder="admin@bandroom.xyz"
+          placeholder="admin"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring focus:ring-indigo-500"
