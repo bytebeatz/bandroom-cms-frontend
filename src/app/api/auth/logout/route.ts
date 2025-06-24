@@ -1,16 +1,18 @@
+// src/app/api/auth/logout/route.ts
+
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function DELETE() {
-  const response = NextResponse.json({ success: true });
+  const cookieStore = await cookies();
 
-  response.cookies.set({
-    name: "access_token",
-    value: "",
+  // Clear the token
+  cookieStore.set("access_token", "", {
     path: "/",
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 0,
+    maxAge: 0, // Expire immediately
   });
 
-  return response;
+  return NextResponse.json({ success: true });
 }
