@@ -2,12 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ensure proper box model */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* Force full height and remove browser defaults */
+html,
 body {
-  @apply bg-white text-black dark:bg-gray-900 dark:text-white;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Global background and text colors */
+body {
+  @apply bg-white text-black dark:bg-black dark:text-white;
 }

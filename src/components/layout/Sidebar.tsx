@@ -20,14 +20,24 @@ export default function Sidebar() {
         isOpen ? "w-64" : "w-16"
       }`}
     >
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="text-gray-400 hover:text-white mb-6"
+      {/* Arrow toggle positioning */}
+      <div
+        className={`flex items-center h-12 ${
+          isOpen ? "justify-start" : "justify-center"
+        }`}
       >
-        {isOpen ? "⏴" : "⏵"}
-      </button>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`text-gray-400 hover:text-white transition ${
+            isOpen ? "ml-3" : ""
+          }`}
+        >
+          {isOpen ? "⏴" : "⏵"}
+        </button>
+      </div>
 
-      <nav className="flex flex-col gap-2">
+      {/* Nav links */}
+      <nav className="flex flex-col gap-2 mt-4">
         {links.map((link) => {
           const isActive = pathname.startsWith(link.href);
           return (
