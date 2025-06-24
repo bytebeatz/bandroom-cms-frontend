@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`bg-gray-900 text-white h-screen p-4 transition-all duration-300 ${
+      className={`bg-gray-900 text-white min-h-screen p-4 transition-all duration-300 ${
         isOpen ? "w-64" : "w-16"
       }`}
     >
