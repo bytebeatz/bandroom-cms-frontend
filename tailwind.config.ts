@@ -4,7 +4,7 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: "media", // or "class" if you want manual toggling
+  darkMode: "class", // NOT 'media'
   theme: {
     extend: {},
   },
