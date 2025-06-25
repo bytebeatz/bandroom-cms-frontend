@@ -1,6 +1,7 @@
 // src/app/dashboard/courses/page.tsx
 
 import Link from "next/link";
+import { getAccessTokenFromCookies, requireAdmin } from "@/lib/auth";
 import { cookies } from "next/headers";
 
 interface Course {
@@ -19,18 +20,18 @@ interface Course {
 }
 
 export default async function CoursesPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
+  await requireAdmin(); // ✅ enforce access first
+
+  const token = await getAccessTokenFromCookies();
+
+  if (!token) throw new Error("No token found");
 
   const res = await fetch(`${process.env.CMS_API_URL}/api/courses`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
 
   const data = await res.json();
-
   const courses: Course[] = Array.isArray(data) ? data : data.courses || [];
 
   return (
@@ -52,29 +53,32 @@ export default async function CoursesPage() {
       ) : (
         <ul className="space-y-4">
           {courses.map((course) => (
-            <li
-              key={course.id}
-              className="border p-4 rounded shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-lg font-semibold">{course.title}</h2>
-                  <p className="text-sm text-gray-500">{course.description}</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Language: {course.language} · Difficulty:{" "}
-                    {course.difficulty} · {course.tags.join(", ")}
-                  </p>
+            <li key={course.id}>
+              <Link href={`/dashboard/courses/${course.id}`}>
+                <div className="border p-4 rounded shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition cursor-pointer">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-lg font-semibold">{course.title}</h2>
+                      <p className="text-sm text-gray-500">
+                        {course.description}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        Language: {course.language} · Difficulty:{" "}
+                        {course.difficulty} · {course.tags.join(", ")}
+                      </p>
+                    </div>
+                    <span
+                      className={`text-xs font-semibold px-2 py-1 rounded ${
+                        course.is_published
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {course.is_published ? "Published" : "Draft"}
+                    </span>
+                  </div>
                 </div>
-                <span
-                  className={`text-xs font-semibold px-2 py-1 rounded ${
-                    course.is_published
-                      ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {course.is_published ? "Published" : "Draft"}
-                </span>
-              </div>
+              </Link>
             </li>
           ))}
         </ul>

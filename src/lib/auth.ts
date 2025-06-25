@@ -31,6 +31,12 @@ export function verifyJWT(
   }
 }
 
+export async function getAccessTokenFromCookies(): Promise<string | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+  return token || null;
+}
+
 /**
  * Async function to extract user from cookies. Use this ONLY in server components.
  */
