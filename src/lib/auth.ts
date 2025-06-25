@@ -2,6 +2,7 @@
 
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export interface JwtPayload {
   user_id: string;
@@ -34,7 +35,7 @@ export function verifyJWT(
  * Async function to extract user from cookies. Use this ONLY in server components.
  */
 export async function getCurrentUserFromCookies(): Promise<JwtPayload | null> {
-  const cookieStore = cookies(); // Safe inside async server function
+  const cookieStore = await cookies(); // ✅ safe in server components
   const token = cookieStore.get("access_token")?.value;
   if (!token) return null;
 
@@ -44,4 +45,23 @@ export async function getCurrentUserFromCookies(): Promise<JwtPayload | null> {
 export async function isAdminFromCookies(): Promise<boolean> {
   const user = await getCurrentUserFromCookies();
   return user?.role === "admin";
+}
+
+/**
+ * Enforce admin-only access.
+ * ✅ Redirects to /auth/login if not logged in.
+ * ✅ Redirects to /403 if logged in but not an admin.
+ */
+export async function requireAdmin(): Promise<JwtPayload> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) redirect("/auth/login");
+
+  const user = verifyJWT(token);
+  if (!user) redirect("/auth/login");
+
+  if (user.role !== "admin") redirect("/403");
+
+  return user;
 }

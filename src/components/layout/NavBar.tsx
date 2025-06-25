@@ -28,7 +28,7 @@ export default function NavBar({ email }: NavBarProps) {
 
   return (
     <nav className="bg-white dark:bg-gray-900 text-black dark:text-white px-6 py-4 flex justify-between items-center shadow">
-      <h1 className="text-lg font-semibold">Bandroom CMS</h1>
+      <h1 className="text-lg font-semibold">Admin Panel</h1>
       <div className="flex items-center space-x-4">
         {/* Theme Toggle Button with Icon */}
         <button

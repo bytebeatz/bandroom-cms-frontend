@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyJWT } from "@/lib/auth";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("auth_token")?.value;
+  const token = req.cookies.get("access_token")?.value;
   const decoded = verifyJWT(token);
 
   const isProtected = req.nextUrl.pathname.startsWith("/dashboard");
