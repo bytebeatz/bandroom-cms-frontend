@@ -1,10 +1,7 @@
-// src/app/dashboard/courses/[id]/page.tsx
-
-//export const dynamic = "force-dynamic";
-
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin, getAccessTokenFromCookies } from "@/lib/auth";
+import DeleteCourseButton from "@/components/forms/DeleteCourseButton"; // ✅ NEW
 
 interface Course {
   id: string;
@@ -22,7 +19,7 @@ interface Course {
 }
 
 export default async function CourseDetailPage(props: {
-  params: Promise<{ id: string }>; // ✅ Next.js 15 requires params to be awaited
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await props.params;
 
@@ -48,12 +45,16 @@ export default async function CourseDetailPage(props: {
           ← Back to Courses
         </Link>
 
-        <Link
-          href={`/dashboard/courses/${id}/edit`}
-          className="inline-flex items-center text-sm px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-        >
-          ✎ Edit Course
-        </Link>
+        <div className="flex items-center space-x-2">
+          <Link
+            href={`/dashboard/courses/${id}/edit`}
+            className="inline-flex items-center text-sm px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            ✎ Edit Course
+          </Link>
+
+          <DeleteCourseButton courseId={id} />
+        </div>
       </div>
 
       <h1 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { getAccessTokenFromCookies, requireAdmin } from "@/lib/auth";
-import { cookies } from "next/headers";
 
 interface Course {
   id: string;
@@ -23,7 +22,6 @@ export default async function CoursesPage() {
   await requireAdmin(); // ✅ enforce access first
 
   const token = await getAccessTokenFromCookies();
-
   if (!token) throw new Error("No token found");
 
   const res = await fetch(`${process.env.CMS_API_URL}/api/courses`, {
@@ -31,8 +29,18 @@ export default async function CoursesPage() {
     cache: "no-store",
   });
 
-  const data = await res.json();
-  const courses: Course[] = Array.isArray(data) ? data : data.courses || [];
+  let data: any;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  const courses: Course[] = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.courses)
+      ? data.courses
+      : [];
 
   return (
     <div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface CourseFormProps {
   courseId?: string;
@@ -88,70 +89,104 @@ export default function CreateCourseForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        name="title"
-        placeholder="Title"
-        value={form.title}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-        required
-      />
-      <input
-        name="slug"
-        placeholder="Slug (e.g. intro-to-rhythm)"
-        value={form.slug}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-        required
-      />
-      <textarea
-        name="description"
-        placeholder="Description"
-        value={form.description}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-        required
-      />
-      <input
-        name="language"
-        placeholder="Language (e.g. en)"
-        value={form.language}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-        required
-      />
-      <input
-        name="difficulty"
-        placeholder="Difficulty (1-5)"
-        value={form.difficulty}
-        onChange={handleChange}
-        type="number"
-        className="w-full p-2 border rounded"
-        required
-      />
-      <input
-        name="tags"
-        placeholder="Tags (comma separated)"
-        value={form.tags}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="icon"
-        placeholder="Icon (e.g. drum)"
-        value={form.icon}
-        onChange={handleChange}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        name="estimatedMinutes"
-        placeholder="Estimated Time (minutes)"
-        value={form.estimatedMinutes}
-        onChange={handleChange}
-        type="number"
-        className="w-full p-2 border rounded"
-      />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div>
+        <label className="block text-sm font-medium mb-1">Title</label>
+        <input
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Slug</label>
+        <input
+          name="slug"
+          placeholder="e.g. intro-to-rhythm"
+          value={form.slug}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Description</label>
+        <textarea
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Language</label>
+        <input
+          name="language"
+          placeholder="e.g. en"
+          value={form.language}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          Difficulty (1–5)
+        </label>
+        <input
+          name="difficulty"
+          value={form.difficulty}
+          onChange={handleChange}
+          type="number"
+          min="1"
+          max="5"
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Tags</label>
+        <input
+          name="tags"
+          placeholder="e.g. rhythm, notation"
+          value={form.tags}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Icon</label>
+        <input
+          name="icon"
+          placeholder="e.g. drum"
+          value={form.icon}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          Estimated Time (minutes)
+        </label>
+        <input
+          name="estimatedMinutes"
+          value={form.estimatedMinutes}
+          onChange={handleChange}
+          type="number"
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
       <label className="flex items-center space-x-2">
         <input
           name="isPublished"
@@ -161,12 +196,21 @@ export default function CreateCourseForm({
         />
         <span>Publish now?</span>
       </label>
-      <button
-        type="submit"
-        className="w-full bg-black dark:bg-white text-white dark:text-black py-2 rounded hover:opacity-90"
-      >
-        {courseId ? "Update Course" : "Create Course"}
-      </button>
+
+      <div className="flex justify-end gap-4 pt-4">
+        <Link
+          href="/dashboard/courses"
+          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm"
+        >
+          Cancel
+        </Link>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded hover:opacity-90 text-sm"
+        >
+          {courseId ? "Update Course" : "Create Course"}
+        </button>
+      </div>
     </form>
   );
 }
