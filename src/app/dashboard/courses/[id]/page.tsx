@@ -1,3 +1,5 @@
+// src/app/dashboard/courses/[id]/page.tsx
+
 //export const dynamic = "force-dynamic";
 
 import Link from "next/link";
@@ -22,7 +24,7 @@ interface Course {
 export default async function CourseDetailPage(props: {
   params: Promise<{ id: string }>; // ✅ Next.js 15 requires params to be awaited
 }) {
-  const { id } = await props.params; // ✅ Critical: await the Promise
+  const { id } = await props.params;
 
   await requireAdmin();
   const token = await getAccessTokenFromCookies();
@@ -38,23 +40,66 @@ export default async function CourseDetailPage(props: {
 
   return (
     <div>
-      <Link
-        href="/dashboard/courses"
-        className="inline-flex items-center text-sm px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition mb-6"
-      >
-        ← Back to Courses
-      </Link>
+      <div className="flex items-center justify-between mb-6">
+        <Link
+          href="/dashboard/courses"
+          className="inline-flex items-center text-sm px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+        >
+          ← Back to Courses
+        </Link>
 
-      <h1 className="text-2xl font-bold mb-2">{course.title}</h1>
-      <p className="text-gray-600 dark:text-gray-400">{course.description}</p>
-      <div className="mt-4 text-sm text-gray-500 space-y-1">
-        <div>Slug: {course.slug}</div>
-        <div>Language: {course.language}</div>
-        <div>Difficulty: {course.difficulty}</div>
-        <div>Tags: {course.tags.join(", ")}</div>
-        <div>Published: {course.is_published ? "Yes" : "No"}</div>
+        <Link
+          href={`/dashboard/courses/${id}/edit`}
+          className="inline-flex items-center text-sm px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+        >
+          ✎ Edit Course
+        </Link>
+      </div>
+
+      <h1 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">
+        {course.title}
+      </h1>
+
+      <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+        {course.description}
+      </p>
+
+      <div className="grid gap-2 text-base text-gray-600 dark:text-gray-300">
         <div>
-          Estimated time: {course.metadata.estimated_minutes ?? "?"} min
+          <span className="font-medium text-gray-800 dark:text-gray-100">
+            Slug:
+          </span>{" "}
+          {course.slug}
+        </div>
+        <div>
+          <span className="font-medium text-gray-800 dark:text-gray-100">
+            Language:
+          </span>{" "}
+          {course.language}
+        </div>
+        <div>
+          <span className="font-medium text-gray-800 dark:text-gray-100">
+            Difficulty:
+          </span>{" "}
+          {course.difficulty}
+        </div>
+        <div>
+          <span className="font-medium text-gray-800 dark:text-gray-100">
+            Tags:
+          </span>{" "}
+          {course.tags.join(", ")}
+        </div>
+        <div>
+          <span className="font-medium text-gray-800 dark:text-gray-100">
+            Published:
+          </span>{" "}
+          {course.is_published ? "Yes" : "No"}
+        </div>
+        <div>
+          <span className="font-medium text-gray-800 dark:text-gray-100">
+            Estimated time:
+          </span>{" "}
+          {course.metadata.estimated_minutes ?? "?"} min
         </div>
       </div>
     </div>

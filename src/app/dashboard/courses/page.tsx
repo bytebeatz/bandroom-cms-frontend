@@ -74,7 +74,7 @@ export default async function CoursesPage() {
                           : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
-                      {course.is_published ? "Published" : "Draft"}
+                      {course.is_published ? "Published" : "Not published"}
                     </span>
                   </div>
                 </div>
