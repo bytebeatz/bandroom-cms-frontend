@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin, getAccessTokenFromCookies } from "@/lib/auth";
-import DeleteCourseButton from "@/components/forms/DeleteCourseButton"; // ✅ NEW
+import DeleteCourseButton from "@/components/ui/DeleteCourseButton";
 
 interface Course {
   id: string;
@@ -46,6 +46,13 @@ export default async function CourseDetailPage(props: {
         </Link>
 
         <div className="flex items-center space-x-2">
+          <Link
+            href={`/dashboard/units/new?courseId=${id}`}
+            className="inline-flex items-center text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          >
+            ➕ Add Unit
+          </Link>
+
           <Link
             href={`/dashboard/courses/${id}/edit`}
             className="inline-flex items-center text-sm px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
