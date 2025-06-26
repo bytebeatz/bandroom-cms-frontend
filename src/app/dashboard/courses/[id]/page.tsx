@@ -18,6 +18,12 @@ interface Course {
   };
 }
 
+interface Unit {
+  id: string;
+  title: string;
+  order_index: number;
+}
+
 export default async function CourseDetailPage(props: {
   params: Promise<{ id: string }>;
 }) {
@@ -26,14 +32,21 @@ export default async function CourseDetailPage(props: {
   await requireAdmin();
   const token = await getAccessTokenFromCookies();
 
-  const res = await fetch(`${process.env.CMS_API_URL}/api/courses/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
-  });
+  const [courseRes, unitsRes] = await Promise.all([
+    fetch(`${process.env.CMS_API_URL}/api/courses/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    }),
+    fetch(`${process.env.CMS_API_URL}/api/units/course/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    }),
+  ]);
 
-  if (!res.ok) return notFound();
+  if (!courseRes.ok) return notFound();
 
-  const course: Course = await res.json();
+  const course: Course = await courseRes.json();
+  const units: Unit[] = unitsRes.ok ? await unitsRes.json() : [];
 
   return (
     <div>
@@ -52,14 +65,12 @@ export default async function CourseDetailPage(props: {
           >
             ➕ Add Unit
           </Link>
-
           <Link
             href={`/dashboard/courses/${id}/edit`}
             className="inline-flex items-center text-sm px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
           >
             ✎ Edit Course
           </Link>
-
           <DeleteCourseButton courseId={id} />
         </div>
       </div>
@@ -72,44 +83,52 @@ export default async function CourseDetailPage(props: {
         {course.description}
       </p>
 
-      <div className="grid gap-2 text-base text-gray-600 dark:text-gray-300">
+      <div className="grid gap-2 text-base text-gray-600 dark:text-gray-300 mb-8">
         <div>
-          <span className="font-medium text-gray-800 dark:text-gray-100">
-            Slug:
-          </span>{" "}
-          {course.slug}
+          <strong>Slug:</strong> {course.slug}
         </div>
         <div>
-          <span className="font-medium text-gray-800 dark:text-gray-100">
-            Language:
-          </span>{" "}
-          {course.language}
+          <strong>Language:</strong> {course.language}
         </div>
         <div>
-          <span className="font-medium text-gray-800 dark:text-gray-100">
-            Difficulty:
-          </span>{" "}
-          {course.difficulty}
+          <strong>Difficulty:</strong> {course.difficulty}
         </div>
         <div>
-          <span className="font-medium text-gray-800 dark:text-gray-100">
-            Tags:
-          </span>{" "}
-          {course.tags.join(", ")}
+          <strong>Tags:</strong> {course.tags.join(", ")}
         </div>
         <div>
-          <span className="font-medium text-gray-800 dark:text-gray-100">
-            Published:
-          </span>{" "}
-          {course.is_published ? "Yes" : "No"}
+          <strong>Published:</strong> {course.is_published ? "Yes" : "No"}
         </div>
         <div>
-          <span className="font-medium text-gray-800 dark:text-gray-100">
-            Estimated time:
-          </span>{" "}
+          <strong>Estimated time:</strong>{" "}
           {course.metadata.estimated_minutes ?? "?"} min
         </div>
       </div>
+
+      <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+        Units
+      </h2>
+
+      {units.length === 0 ? (
+        <p className="text-gray-500 dark:text-gray-400">
+          No units yet. Click “Add Unit” to begin building your course.
+        </p>
+      ) : (
+        <ul className="space-y-2">
+          {units.map((unit) => (
+            <li key={unit.id}>
+              <Link
+                href={`/dashboard/units/${unit.id}`}
+                className="block p-4 rounded border hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+              >
+                <div className="font-medium text-lg text-gray-800 dark:text-white">
+                  {unit.order_index}. {unit.title}
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
