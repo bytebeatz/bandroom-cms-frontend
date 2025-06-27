@@ -38,12 +38,22 @@ export default async function UnitDetailPage(props: {
         >
           ← Back to Course
         </Link>
-        <Link
-          href={`/dashboard/skills/new?unitId=${unit.id}`}
-          className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded hover:opacity-90"
-        >
-          + Add Skill
-        </Link>
+
+        <div className="flex gap-2">
+          <Link
+            href={`/dashboard/units/${unit.id}/edit`}
+            className="px-4 py-2 border text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            ✎ Edit Unit
+          </Link>
+
+          <Link
+            href={`/dashboard/skills/new?unitId=${unit.id}`}
+            className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm rounded hover:opacity-90"
+          >
+            + Add Skill
+          </Link>
+        </div>
       </div>
 
       <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">

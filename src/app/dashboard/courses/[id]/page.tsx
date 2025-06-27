@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin, getAccessTokenFromCookies } from "@/lib/auth";
 import DeleteCourseButton from "@/components/ui/DeleteCourseButton";
+import DeleteUnitButton from "@/components/ui/DeleteUnitButton";
 
 interface Course {
   id: string;
@@ -46,7 +47,16 @@ export default async function CourseDetailPage(props: {
   if (!courseRes.ok) return notFound();
 
   const course: Course = await courseRes.json();
-  const units: Unit[] = unitsRes.ok ? await unitsRes.json() : [];
+  //  const units: Unit[] = unitsRes.ok ? await unitsRes.json() : [];
+  let units: Unit[] = [];
+  if (unitsRes.ok) {
+    try {
+      const data = await unitsRes.json();
+      units = Array.isArray(data) ? data : [];
+    } catch {
+      units = [];
+    }
+  }
 
   return (
     <div>
@@ -114,17 +124,28 @@ export default async function CourseDetailPage(props: {
           No units yet. Click “Add Unit” to begin building your course.
         </p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="flex flex-wrap gap-4">
           {units.map((unit) => (
-            <li key={unit.id}>
-              <Link
-                href={`/dashboard/units/${unit.id}`}
-                className="block p-4 rounded border hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-              >
-                <div className="font-medium text-lg text-gray-800 dark:text-white">
-                  {unit.order_index}. {unit.title}
+            <li key={unit.id} className="w-full sm:w-1/2 lg:w-1/4">
+              <div className="relative p-4 rounded border hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                {/* Top-right edit/delete controls */}
+                <div className="absolute top-2 right-2 flex gap-2">
+                  <Link
+                    href={`/dashboard/units/${unit.id}/edit`}
+                    className="text-lg text-gray-600 hover:text-gray-900"
+                  >
+                    ✎
+                  </Link>
+                  <DeleteUnitButton unitId={unit.id} courseId={id} />
                 </div>
-              </Link>
+
+                {/* Main unit title area */}
+                <Link href={`/dashboard/units/${unit.id}`}>
+                  <div className="font-medium text-lg text-gray-800 dark:text-white">
+                    {unit.order_index}. {unit.title}
+                  </div>
+                </Link>
+              </div>
             </li>
           ))}
         </ul>
