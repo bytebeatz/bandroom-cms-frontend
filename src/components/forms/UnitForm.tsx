@@ -3,66 +3,94 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function UnitForm({ courseId }: { courseId: string }) {
+export default function UnitForm({
+  courseId,
+  unitId,
+  defaultValues,
+}: {
+  courseId: string;
+  unitId?: string;
+  defaultValues?: {
+    title: string;
+    orderIndex: number;
+  };
+}) {
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [orderIndex, setOrderIndex] = useState(1);
+  const [title, setTitle] = useState(defaultValues?.title || "");
+  const [orderIndex, setOrderIndex] = useState(defaultValues?.orderIndex || 1);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("/api/units", {
-      method: "POST",
+    const method = unitId ? "PUT" : "POST";
+    const endpoint = unitId ? `/api/units/${unitId}` : "/api/units";
+
+    const res = await fetch(endpoint, {
+      method,
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        course_id: courseId,
         title,
         order_index: Number(orderIndex),
+        course_id: courseId,
       }),
     });
 
     if (!res.ok) {
       const err = await res.text();
-      console.error("Failed to create unit", res.status, err);
+      console.error(`${method} unit failed`, res.status, err);
+      alert("Failed to save unit.");
       return;
     }
 
-    const created = await res.json();
-    router.push(`/dashboard/units/${created.id}`);
+    const updated = await res.json();
+    router.push(`/dashboard/units/${updated.id}`);
   };
 
   const handleCancel = () => {
-    router.push("/dashboard/courses"); // 👈 back to course list
+    router.push(`/dashboard/courses/${courseId}`);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-      <input
-        name="title"
-        placeholder="Unit title (e.g. Rhythm Basics)"
-        className="w-full border p-2 rounded"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        required
-      />
-      <input
-        name="orderIndex"
-        placeholder="Order Index"
-        type="number"
-        className="w-full border p-2 rounded"
-        value={orderIndex}
-        onChange={(e) => setOrderIndex(e.target.valueAsNumber)}
-        required
-      />
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-md">
+      <div>
+        <label htmlFor="title" className="block font-medium mb-1">
+          Unit Title
+        </label>
+        <input
+          id="title"
+          name="title"
+          placeholder="e.g. Rhythm Basics"
+          className="w-full border p-2 rounded"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="orderIndex" className="block font-medium mb-1">
+          Order Index
+        </label>
+        <input
+          id="orderIndex"
+          name="orderIndex"
+          placeholder="e.g. 1"
+          type="number"
+          className="w-full border p-2 rounded"
+          value={orderIndex}
+          onChange={(e) => setOrderIndex(e.target.valueAsNumber || 0)}
+          required
+        />
+      </div>
 
       <div className="space-y-2">
         <button
           type="submit"
           className="w-full bg-black dark:bg-white text-white dark:text-black p-2 rounded hover:opacity-90"
         >
-          Create Unit
+          {unitId ? "Update Unit" : "Create Unit"}
         </button>
 
         <button

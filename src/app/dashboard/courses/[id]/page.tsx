@@ -85,33 +85,36 @@ export default async function CourseDetailPage(props: {
         </div>
       </div>
 
-      <h1 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">
-        {course.title}
+      <h1 className="text-xl font-bold mb-3 text-gray-800 dark:text-white">
+        Course details
       </h1>
-
-      <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-        {course.description}
-      </p>
 
       <div className="grid gap-2 text-base text-gray-600 dark:text-gray-300 mb-8">
         <div>
-          <strong>Slug:</strong> {course.slug}
+          Course:<strong> {course.title}</strong>
         </div>
         <div>
-          <strong>Language:</strong> {course.language}
+          Description:<strong> {course.description}</strong>
+        </div>
+
+        <div>
+          Slug:<strong> {course.slug}</strong>
         </div>
         <div>
-          <strong>Difficulty:</strong> {course.difficulty}
+          Language:<strong> {course.language}</strong>
         </div>
         <div>
-          <strong>Tags:</strong> {course.tags.join(", ")}
+          Difficulty:<strong> {course.difficulty}</strong>
         </div>
         <div>
-          <strong>Published:</strong> {course.is_published ? "Yes" : "No"}
+          Tags:<strong> {course.tags.join(", ")}</strong>
         </div>
         <div>
-          <strong>Estimated time:</strong>{" "}
-          {course.metadata.estimated_minutes ?? "?"} min
+          Published:<strong> {course.is_published ? "Yes" : "No"} </strong>
+        </div>
+        <div>
+          Estimated time:{" "}
+          <strong>{course.metadata.estimated_minutes ?? "?"} min</strong>
         </div>
       </div>
 

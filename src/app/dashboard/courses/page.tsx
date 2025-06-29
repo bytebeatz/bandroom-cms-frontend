@@ -1,5 +1,3 @@
-// src/app/dashboard/courses/page.tsx
-
 import Link from "next/link";
 import { getAccessTokenFromCookies, requireAdmin } from "@/lib/auth";
 
@@ -59,12 +57,12 @@ export default async function CoursesPage() {
           No courses available yet.
         </p>
       ) : (
-        <ul className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {courses.map((course) => (
-            <li key={course.id}>
+            <div key={course.id}>
               <Link href={`/dashboard/courses/${course.id}`}>
-                <div className="border p-4 rounded shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition cursor-pointer">
-                  <div className="flex justify-between items-start">
+                <div className="border p-4 rounded shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition cursor-pointer h-full">
+                  <div className="flex justify-between items-start h-full flex-col">
                     <div>
                       <h2 className="text-lg font-semibold">{course.title}</h2>
                       <p className="text-sm text-gray-500">
@@ -76,7 +74,7 @@ export default async function CoursesPage() {
                       </p>
                     </div>
                     <span
-                      className={`text-xs font-semibold px-2 py-1 rounded ${
+                      className={`text-xs font-semibold px-2 py-1 rounded mt-2 self-start ${
                         course.is_published
                           ? "bg-green-100 text-green-800"
                           : "bg-yellow-100 text-yellow-800"
@@ -87,9 +85,9 @@ export default async function CoursesPage() {
                   </div>
                 </div>
               </Link>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

@@ -26,9 +26,11 @@ const sections: NavSection[] = [
   {
     title: "Syllabus",
     links: [
-      { name: "Courses", href: "/dashboard/courses" },
-      { name: "Units", href: "/dashboard/units" },
-      { name: "Lessons", href: "/dashboard/lessons" },
+      { name: "Create Course", href: "/dashboard/courses/new" },
+
+      { name: "All Courses", href: "/dashboard/courses" },
+      //      { name: "Units", href: "/dashboard/units" },
+      //    { name: "Lessons", href: "/dashboard/lessons" },
     ],
   },
   {
