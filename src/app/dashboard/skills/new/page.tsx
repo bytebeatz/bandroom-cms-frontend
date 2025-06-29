@@ -1,5 +1,4 @@
-// src/app/dashboard/skills/new/page.tsx
-
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin, getAccessTokenFromCookies } from "@/lib/auth";
 import SkillForm from "@/components/forms/SkillForm";
@@ -14,7 +13,6 @@ export default async function NewSkillPage(props: {
   await requireAdmin();
   const token = await getAccessTokenFromCookies();
 
-  // Optional: fetch course or unit info to display
   const res = await fetch(
     `${process.env.CMS_API_URL}/api/courses/${courseId}`,
     {
@@ -29,9 +27,17 @@ export default async function NewSkillPage(props: {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <Link
+        href={`/dashboard/units/${unitId}`}
+        className="inline-flex items-center text-sm px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition mb-6"
+      >
+        ← Back to Units
+      </Link>
+
       <h1 className="text-2xl font-bold mb-6">
         Add Skill to: <span className="text-blue-600">{course.title}</span>
       </h1>
+
       <SkillForm courseId={courseId} unitId={unitId} />
     </div>
   );
