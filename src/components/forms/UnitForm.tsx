@@ -13,11 +13,15 @@ export default function UnitForm({
   defaultValues?: {
     title: string;
     orderIndex: number;
+    description?: string;
   };
 }) {
   const router = useRouter();
   const [title, setTitle] = useState(defaultValues?.title || "");
   const [orderIndex, setOrderIndex] = useState(defaultValues?.orderIndex || 1);
+  const [description, setDescription] = useState(
+    defaultValues?.description || "",
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +38,7 @@ export default function UnitForm({
         title,
         order_index: Number(orderIndex),
         course_id: courseId,
+        description,
       }),
     });
 
@@ -82,6 +87,21 @@ export default function UnitForm({
           value={orderIndex}
           onChange={(e) => setOrderIndex(e.target.valueAsNumber || 0)}
           required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="description" className="block font-medium mb-1">
+          Description
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Optional description for this unit"
+          className="w-full border p-2 rounded"
+          rows={3}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </div>
 

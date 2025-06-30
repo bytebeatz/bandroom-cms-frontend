@@ -9,6 +9,7 @@ interface Unit {
   title: string;
   order_index: number;
   course_id: string;
+  description?: string;
 }
 
 export default async function EditUnitPage(props: {
@@ -37,6 +38,7 @@ export default async function EditUnitPage(props: {
         defaultValues={{
           title: unit.title,
           orderIndex: unit.order_index,
+          description: unit.description || "",
         }}
       />
     </div>

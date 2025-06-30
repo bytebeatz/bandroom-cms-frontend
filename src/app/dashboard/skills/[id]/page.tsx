@@ -51,9 +51,7 @@ export default async function SkillDetailPage({
       </div>
 
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <span>{skill.icon}</span> {skill.title}
-        </h1>
+        <h1 className="text-2xl font-bold flex items-center gap-2">Skills</h1>
         <Link
           href={`/dashboard/skills/${skill.id}/edit`}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
@@ -62,38 +60,49 @@ export default async function SkillDetailPage({
         </Link>
       </div>
 
-      <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-        <p>
-          <strong>Slug:</strong> {skill.slug}
-        </p>
-        <p>
-          <strong>Order Index:</strong> {skill.order_index}
-        </p>
-        <p>
-          <strong>Difficulty:</strong> {skill.difficulty}
-        </p>
-        <p>
-          <strong>Max Crowns:</strong> {skill.max_crowns}
-        </p>
-        <p>
-          <strong>XP / Crown:</strong> {skill.xp_per_crown}
-        </p>
-        <p>
-          <strong>Base XP:</strong> {skill.base_xp_reward}
-        </p>
-        <p>
-          <strong>Tags:</strong>{" "}
-          {skill.tags && skill.tags.length > 0 ? skill.tags.join(", ") : "None"}
-        </p>
-        <p>
-          <strong>Version:</strong> {skill.version}
-        </p>
-        <p>
-          <strong>Metadata:</strong>{" "}
-          {skill.metadata && Object.keys(skill.metadata).length > 0
-            ? JSON.stringify(skill.metadata)
-            : "None"}
-        </p>
+      <div className="grid gap-2 text-base text-gray-600 dark:text-gray-300 mb-8">
+        <div>
+          Skill title:<strong> {skill.title}</strong>
+        </div>
+        <div>
+          Slug:<strong> {skill.slug}</strong>
+        </div>
+        <div>
+          Order Index:<strong> {skill.order_index}</strong>
+        </div>
+        <div>
+          Difficulty:<strong> {skill.difficulty}</strong>
+        </div>
+        <div>
+          Max Crowns:<strong> {skill.max_crowns}</strong>
+        </div>
+        <div>
+          XP / Crown:<strong> {skill.xp_per_crown}</strong>
+        </div>
+        <div>
+          Base XP:<strong> {skill.base_xp_reward}</strong>
+        </div>
+        <div>
+          Tags:
+          <strong>
+            {" "}
+            {skill.tags && skill.tags.length > 0
+              ? skill.tags.join(", ")
+              : "None"}
+          </strong>
+        </div>
+        <div>
+          Version:<strong> {skill.version} </strong>
+        </div>
+        <div>
+          Metadata:
+          <strong>
+            {" "}
+            {skill.metadata && Object.keys(skill.metadata).length > 0
+              ? JSON.stringify(skill.metadata)
+              : "None"}
+          </strong>
+        </div>
       </div>
     </div>
   );

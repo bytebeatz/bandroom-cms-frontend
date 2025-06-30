@@ -19,10 +19,19 @@ interface Course {
   };
 }
 
+interface Skill {
+  id: string;
+  title: string;
+  icon: string;
+  order_index: number;
+  difficulty: number;
+}
+
 interface Unit {
   id: string;
   title: string;
   order_index: number;
+  skills?: Skill[];
 }
 
 export default async function CourseDetailPage(props: {
@@ -45,14 +54,36 @@ export default async function CourseDetailPage(props: {
   ]);
 
   if (!courseRes.ok) return notFound();
-
   const course: Course = await courseRes.json();
-  //  const units: Unit[] = unitsRes.ok ? await unitsRes.json() : [];
+
   let units: Unit[] = [];
+
   if (unitsRes.ok) {
     try {
-      const data = await unitsRes.json();
-      units = Array.isArray(data) ? data : [];
+      const unitData: Unit[] = await unitsRes.json();
+
+      const skillPromises = unitData.map((unit) =>
+        fetch(`${process.env.CMS_API_URL}/api/skills?unit_id=${unit.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        }).then(async (res) => {
+          if (!res.ok) return [];
+          const raw = await res.text();
+          try {
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : (parsed.skills ?? []);
+          } catch {
+            return [];
+          }
+        }),
+      );
+
+      const skillGroups = await Promise.all(skillPromises);
+
+      units = unitData.map((unit, idx) => ({
+        ...unit,
+        skills: skillGroups[idx],
+      }));
     } catch {
       units = [];
     }
@@ -96,7 +127,6 @@ export default async function CourseDetailPage(props: {
         <div>
           Description:<strong> {course.description}</strong>
         </div>
-
         <div>
           Slug:<strong> {course.slug}</strong>
         </div>
@@ -131,7 +161,7 @@ export default async function CourseDetailPage(props: {
           {units.map((unit) => (
             <li key={unit.id} className="w-full sm:w-1/2 lg:w-1/4">
               <div className="relative p-4 rounded border hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                {/* Top-right edit/delete controls */}
+                {/* Edit/Delete buttons */}
                 <div className="absolute top-2 right-2 flex gap-2">
                   <Link
                     href={`/dashboard/units/${unit.id}/edit`}
@@ -142,12 +172,29 @@ export default async function CourseDetailPage(props: {
                   <DeleteUnitButton unitId={unit.id} courseId={id} />
                 </div>
 
-                {/* Main unit title area */}
+                {/* Unit title */}
                 <Link href={`/dashboard/units/${unit.id}`}>
                   <div className="font-medium text-lg text-gray-800 dark:text-white">
                     {unit.order_index}. {unit.title}
                   </div>
                 </Link>
+
+                {/* Skills inside the unit */}
+                <div className="mt-3 space-y-1">
+                  {unit.skills && unit.skills.length > 0 ? (
+                    unit.skills.map((skill) => (
+                      <Link
+                        key={skill.id}
+                        href={`/dashboard/skills/${skill.id}`}
+                        className="block text-sm text-gray-600 hover:text-blue-600"
+                      >
+                        {skill.icon} {skill.title} (Lvl {skill.difficulty})
+                      </Link>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-400">No skills</p>
+                  )}
+                </div>
               </div>
             </li>
           ))}

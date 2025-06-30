@@ -1,35 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SkillForm({
   courseId,
   unitId,
+  skillId,
+  defaultValues,
 }: {
   courseId: string;
   unitId: string;
+  skillId?: string;
+  defaultValues?: {
+    title: string;
+    slug: string;
+    icon: string;
+    orderIndex: number;
+    difficulty: number;
+    maxCrowns: number;
+    baseXpReward: number;
+    xpPerCrown: number;
+    prerequisiteSkillIds: string[];
+    tags: string[];
+    metadata: object;
+    version: number;
+  };
 }) {
   const router = useRouter();
 
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [icon, setIcon] = useState("🎯");
-  const [orderIndex, setOrderIndex] = useState(1);
-  const [difficulty, setDifficulty] = useState(2);
-  const [maxCrowns, setMaxCrowns] = useState(3);
-  const [baseXpReward, setBaseXpReward] = useState(10);
-  const [xpPerCrown, setXpPerCrown] = useState(5);
-  const [prerequisites, setPrerequisites] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
-  const [metadata, setMetadata] = useState({});
-  const [version, setVersion] = useState(1);
+  const [title, setTitle] = useState(defaultValues?.title || "");
+  const [slug, setSlug] = useState(defaultValues?.slug || "");
+  const [icon, setIcon] = useState(defaultValues?.icon || "🎯");
+  const [orderIndex, setOrderIndex] = useState(defaultValues?.orderIndex || 1);
+  const [difficulty, setDifficulty] = useState(defaultValues?.difficulty || 2);
+  const [maxCrowns, setMaxCrowns] = useState(defaultValues?.maxCrowns || 3);
+  const [baseXpReward, setBaseXpReward] = useState(
+    defaultValues?.baseXpReward || 10,
+  );
+  const [xpPerCrown, setXpPerCrown] = useState(defaultValues?.xpPerCrown || 5);
+  const [prerequisites, setPrerequisites] = useState<string[]>(
+    defaultValues?.prerequisiteSkillIds || [],
+  );
+  const [tags, setTags] = useState<string[]>(defaultValues?.tags || []);
+  const [metadata, setMetadata] = useState<object>(
+    defaultValues?.metadata || {},
+  );
+  const [version, setVersion] = useState(defaultValues?.version || 1);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("/api/skills", {
-      method: "POST",
+    const method = skillId ? "PUT" : "POST";
+    const endpoint = skillId ? `/api/skills/${skillId}` : "/api/skills";
+
+    const res = await fetch(endpoint, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         course_id: courseId,
@@ -51,16 +77,17 @@ export default function SkillForm({
 
     if (!res.ok) {
       const err = await res.text();
-      console.error("Failed to create skill", res.status, err);
+      console.error(`${method} skill failed`, res.status, err);
+      alert("Failed to save skill.");
       return;
     }
 
-    const created = await res.json();
-    router.push(`/dashboard/skills/${created.id}`);
+    const updated = await res.json();
+    router.push(`/dashboard/skills/${updated.id}`);
   };
 
   const handleCancel = () => {
-    router.push("/dashboard/courses");
+    router.push(`/dashboard/courses/${courseId}`);
   };
 
   return (
@@ -69,7 +96,6 @@ export default function SkillForm({
         <label className="block mb-1 text-sm font-medium">Title</label>
         <input
           name="title"
-          placeholder="e.g. Time Signatures"
           className="w-full border p-2 rounded"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -81,7 +107,6 @@ export default function SkillForm({
         <label className="block mb-1 text-sm font-medium">Slug</label>
         <input
           name="slug"
-          placeholder="e.g. time-signatures"
           className="w-full border p-2 rounded"
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
@@ -92,7 +117,6 @@ export default function SkillForm({
         <label className="block mb-1 text-sm font-medium">Icon</label>
         <input
           name="icon"
-          placeholder="e.g. 🎯"
           className="w-full border p-2 rounded"
           value={icon}
           onChange={(e) => setIcon(e.target.value)}
@@ -162,12 +186,11 @@ export default function SkillForm({
 
       <div>
         <label className="block mb-1 text-sm font-medium">
-          Prerequisite Skill IDs (comma-separated UUIDs)
+          Prerequisite Skill IDs (comma-separated)
         </label>
         <input
           name="prerequisites"
           className="w-full border p-2 rounded"
-          placeholder="uuid-1,uuid-2"
           value={prerequisites.join(",")}
           onChange={(e) =>
             setPrerequisites(
@@ -187,7 +210,6 @@ export default function SkillForm({
         <input
           name="tags"
           className="w-full border p-2 rounded"
-          placeholder="reading, fundamentals"
           value={tags.join(",")}
           onChange={(e) =>
             setTags(
@@ -197,6 +219,27 @@ export default function SkillForm({
                 .filter(Boolean),
             )
           }
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1 text-sm font-medium">
+          Metadata (JSON)
+        </label>
+        <textarea
+          name="metadata"
+          className="w-full border p-2 rounded font-mono text-sm"
+          rows={4}
+          placeholder='e.g. {"note_type": "whole", "category": "intro"}'
+          defaultValue={JSON.stringify(metadata, null, 2)}
+          onChange={(e) => {
+            try {
+              const parsed = JSON.parse(e.target.value);
+              setMetadata(parsed);
+            } catch {
+              setMetadata({});
+            }
+          }}
         />
       </div>
 
@@ -223,7 +266,7 @@ export default function SkillForm({
           type="submit"
           className="w-1/2 bg-black dark:bg-white text-white dark:text-black p-2 rounded hover:opacity-90"
         >
-          Create Skill
+          {skillId ? "Update Skill" : "Create Skill"}
         </button>
       </div>
     </form>
