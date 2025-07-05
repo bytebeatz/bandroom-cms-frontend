@@ -33,9 +33,9 @@ export default function LoginForm() {
     >
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-          Bandroom CMS
+          Admin Login
         </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">Admin Login</p>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">BANDROOM</p>
       </div>
 
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
