@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { fetchCourses } from "@/lib/api";
 
 export default async function CoursesPage() {
@@ -5,7 +6,15 @@ export default async function CoursesPage() {
 
   return (
     <div className="px-6 py-8">
-      <h1 className="text-2xl font-semibold mb-6">All Courses</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">All Courses</h1>
+        <Link
+          href="/dashboard/courses/new"
+          className="px-4 py-2 rounded-md bg-zinc-900 text-white text-sm hover:bg-zinc-800 transition"
+        >
+          + Add Course
+        </Link>
+      </div>
 
       <div className="flex flex-wrap gap-4">
         {courses.map((course) => (

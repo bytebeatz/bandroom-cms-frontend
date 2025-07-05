@@ -27,7 +27,7 @@ export default function Sidebar({ user }: { user: { email: string } }) {
   }
 
   return (
-    <aside className="h-screen w-64 bg-zinc-950 text-white flex flex-col border-r border-zinc-800">
+    <aside className="min-h-screen w-64 bg-zinc-950 text-white flex flex-col border-r border-zinc-800">
       <div className="px-6 py-4 text-2xl font-bold">Admin</div>
 
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
