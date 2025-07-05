@@ -15,7 +15,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Navbar />
+      <Navbar user={{ email: user.email }} />
       <main className="flex-1 p-6">{children}</main>
     </div>
   );
