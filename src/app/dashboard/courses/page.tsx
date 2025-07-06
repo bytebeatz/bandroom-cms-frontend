@@ -39,7 +39,7 @@ export default async function CoursesPage() {
               <p className="text-sm text-zinc-500">{course.description}</p>
 
               <p className="text-xs text-zinc-400">
-                Difficulty: {course.difficulty} • Lang: {course.language}
+                Difficulty: {course.difficulty}
               </p>
             </div>
           </div>
