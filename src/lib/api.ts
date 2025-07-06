@@ -18,3 +18,15 @@ export async function fetchCourses() {
 
   return res.json();
 }
+
+export async function fetchCourseById(id: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/courses/${id}`,
+    {
+      headers: await getAuthHeaders(),
+    },
+  );
+
+  if (!res.ok) return null;
+  return await res.json();
+}

@@ -19,7 +19,10 @@ export default async function CoursesPage() {
       <div className="flex flex-wrap gap-4">
         {courses.map((course) => (
           <div key={course.id} className="w-full sm:w-1/2 lg:w-1/4 p-2">
-            <div className="bg-zinc-50 border rounded-md p-4 hover:bg-zinc-100 transition cursor-pointer space-y-2">
+            <Link
+              href={`/dashboard/courses/${course.id}`}
+              className="block bg-zinc-50 border rounded-md p-4 hover:bg-zinc-100 transition cursor-pointer space-y-2"
+            >
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-medium text-zinc-800">
                   {course.title}
@@ -41,7 +44,7 @@ export default async function CoursesPage() {
               <p className="text-xs text-zinc-400">
                 Difficulty: {course.difficulty}
               </p>
-            </div>
+            </Link>
           </div>
         ))}
       </div>

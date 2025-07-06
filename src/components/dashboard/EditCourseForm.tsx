@@ -3,16 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function CreateCourseForm() {
+export default function EditCourseForm({ initialData }: { initialData: any }) {
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [description, setDescription] = useState("");
-  const [language, setLanguage] = useState("en");
-  const [difficulty, setDifficulty] = useState(1);
-  const [tags, setTags] = useState("");
-  const [metadata, setMetadata] = useState("");
-  const [isPublished, setIsPublished] = useState(false);
+
+  const [title, setTitle] = useState(initialData.title);
+  const [slug, setSlug] = useState(initialData.slug);
+  const [description, setDescription] = useState(initialData.description);
+  const [language, setLanguage] = useState(initialData.language);
+  const [difficulty, setDifficulty] = useState(initialData.difficulty);
+  const [tags, setTags] = useState(initialData.tags.join(", "));
+  const [metadata, setMetadata] = useState(
+    JSON.stringify(initialData.metadata),
+  );
+  const [isPublished, setIsPublished] = useState(initialData.is_published);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,8 +34,8 @@ export default function CreateCourseForm() {
       is_published: isPublished,
     };
 
-    const res = await fetch("/api/courses", {
-      method: "POST",
+    const res = await fetch(`/api/courses/${initialData.id}`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -40,21 +43,13 @@ export default function CreateCourseForm() {
     if (res.ok) {
       router.push("/dashboard/courses");
     } else {
-      alert("Failed to create course.");
+      alert("Failed to update course.");
     }
   }
 
-  function handleCancel() {
-    router.push("/dashboard/courses");
-  }
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-4xl mx-auto px-6 py-10 space-y-8"
-    >
-      <h1 className="text-2xl font-bold">Create New Course</h1>
-
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Same fields as CreateCourseForm */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Title */}
         <div className="flex flex-col gap-2">
@@ -132,7 +127,6 @@ export default function CreateCourseForm() {
             onChange={(e) => setMetadata(e.target.value)}
             className="border rounded px-3 py-2 font-mono text-sm"
             rows={4}
-            placeholder='e.g. {"icon":"🎤","estimated_minutes":15}'
           />
         </div>
 
@@ -147,18 +141,17 @@ export default function CreateCourseForm() {
         </div>
       </div>
 
-      {/* Buttons */}
       <div className="flex gap-4">
         <button
           type="submit"
           className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
         >
-          Create Course
+          Update Course
         </button>
         <button
           type="button"
-          onClick={handleCancel}
-          className="bg-zinc-200 text-zinc-800 px-6 py-2 rounded hover:bg-zinc-300"
+          onClick={() => router.back()}
+          className="bg-zinc-600 text-white px-6 py-2 rounded hover:bg-zinc-700"
         >
           Cancel
         </button>
