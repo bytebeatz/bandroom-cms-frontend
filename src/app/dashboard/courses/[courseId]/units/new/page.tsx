@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 
 export default function NewUnitPage() {
   const router = useRouter();
-  const { id: courseId } = useParams(); // ✅ get `id` from params
+  const { courseId } = useParams();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

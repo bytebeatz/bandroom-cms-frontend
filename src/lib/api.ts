@@ -44,5 +44,21 @@ export async function fetchUnitsByCourseId(courseId: string): Promise<Unit[]> {
 
   if (!res.ok) return [];
 
+  const data = await res.json();
+
+  // Always return a safe array
+  return Array.isArray(data) ? data : [];
+}
+
+export async function fetchUnitById(unitId: string): Promise<Unit | null> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/units/${unitId}`,
+    { headers },
+  );
+
+  if (!res.ok) return null;
+
   return res.json();
 }

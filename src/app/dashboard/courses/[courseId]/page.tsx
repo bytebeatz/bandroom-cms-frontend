@@ -1,4 +1,4 @@
-// app/dashboard/courses/[id]/page.tsx
+// app/dashboard/courses/[courseId]/page.tsx
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { fetchCourseById, fetchUnitsByCourseId, Course, Unit } from "@/lib/api";
@@ -6,12 +6,12 @@ import { fetchCourseById, fetchUnitsByCourseId, Course, Unit } from "@/lib/api";
 export default async function CourseDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ courseId: string }>;
 }) {
-  const { id } = await params; // ✅ Unwrap first
+  const { courseId } = await params;
 
-  const course: Course | null = await fetchCourseById(id);
-  const units: Unit[] = await fetchUnitsByCourseId(id);
+  const course: Course | null = await fetchCourseById(courseId);
+  const units = await fetchUnitsByCourseId(courseId);
 
   if (!course) {
     notFound();
@@ -36,6 +36,7 @@ export default async function CourseDetailPage({
           </Link>
         </div>
       </div>
+
       <p className="text-sm text-zinc-500 mb-4">
         Title: <strong>{course.title}</strong>
       </p>
@@ -103,29 +104,33 @@ export default async function CourseDetailPage({
         {units.length === 0 ? (
           <p className="text-sm text-zinc-500">No units created yet.</p>
         ) : (
-          <ul className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {units.map((unit) => (
-              <li
+              <div
                 key={unit.id}
                 className="p-4 border rounded-md bg-white shadow-sm hover:shadow transition"
               >
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col justify-between h-full">
                   <div>
-                    <p className="font-semibold">{unit.title}</p>
+                    <p className="font-semibold">
+                      {unit.order_index}. {unit.title}
+                    </p>
                     <p className="text-sm text-zinc-500">
                       {unit.description || "No description"}
                     </p>
                   </div>
-                  <Link
-                    href={`/dashboard/courses/${course.id}/units/${unit.id}`}
-                    className="text-sm text-blue-600 hover:underline"
-                  >
-                    View
-                  </Link>
+                  <div className="mt-2">
+                    <Link
+                      href={`/dashboard/courses/${course.id}/units/${unit.id}`}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      View
+                    </Link>
+                  </div>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>
