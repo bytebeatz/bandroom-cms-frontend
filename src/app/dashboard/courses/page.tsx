@@ -16,9 +16,9 @@ export default async function CoursesPage() {
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap -mx-2">
         {courses.map((course) => (
-          <div key={course.id} className="w-full sm:w-1/2 lg:w-1/4 p-2">
+          <div key={course.id} className="w-full sm:w-1/2 p-2">
             <Link
               href={`/dashboard/courses/${course.id}`}
               className="block bg-zinc-50 border rounded-md p-4 hover:bg-zinc-100 transition cursor-pointer space-y-2"
@@ -27,7 +27,6 @@ export default async function CoursesPage() {
                 <h2 className="text-lg font-medium text-zinc-800">
                   {course.title}
                 </h2>
-
                 <span
                   className={`text-xs font-semibold px-2 py-1 rounded-sm ${
                     course.is_published
@@ -38,9 +37,7 @@ export default async function CoursesPage() {
                   {course.is_published ? "Published" : "Unpublished"}
                 </span>
               </div>
-
               <p className="text-sm text-zinc-500">{course.description}</p>
-
               <p className="text-xs text-zinc-400">
                 Difficulty: {course.difficulty}
               </p>
