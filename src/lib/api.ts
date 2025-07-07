@@ -62,3 +62,30 @@ export async function fetchUnitById(unitId: string): Promise<Unit | null> {
 
   return res.json();
 }
+
+export async function fetchSkillsByUnitId(unitId: string): Promise<Skill[]> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/skills?unit_id=${unitId}`,
+    { headers },
+  );
+
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+}
+
+export async function fetchSkillById(skillId: string): Promise<Skill | null> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/skills/${skillId}`,
+    { headers },
+  );
+
+  if (!res.ok) return null;
+
+  return res.json();
+}
