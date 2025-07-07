@@ -188,13 +188,25 @@ export default function CreateSkillForm() {
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        {isSubmitting ? "Creating..." : "Create Skill"}
-      </button>
+      <div className="flex justify-end gap-4 mt-6">
+        <button
+          type="button"
+          onClick={() =>
+            router.push(`/dashboard/courses/${courseId}/units/${unitId}`)
+          }
+          className="px-5 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        >
+          {isSubmitting ? "Creating..." : "Create Skill"}
+        </button>
+      </div>
     </form>
   );
 }

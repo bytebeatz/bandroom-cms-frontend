@@ -200,12 +200,25 @@ export default function EditSkillForm({ skill }: Props) {
         />
       </div>
 
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-      >
-        Save Changes
-      </button>
+      <div className="flex gap-4">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+        >
+          Save Changes
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            router.push(
+              `/dashboard/courses/${skill.course_id}/units/${skill.unit_id}`,
+            )
+          }
+          className="bg-gray-200 text-gray-700 px-6 py-2 rounded hover:bg-gray-300"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 }
