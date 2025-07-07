@@ -41,56 +41,79 @@ export default async function CourseDetailPage({
   }
 
   return (
-    <div className="px-6 py-8 max-w-3xl">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-3xl font-bold">{course.title}</h1>
-        <Link
-          href={`/dashboard/courses/${course.id}/edit`}
-          className="text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Edit Course
-        </Link>
+    <div className="px-6 py-8 max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+        <h1 className="text-md text-zinc-500">
+          Course: <span className="text-xl font-semibold">{course.title}</span>
+        </h1>
+        <div className="flex gap-2">
+          <Link
+            href={`/dashboard/courses/${course.id}/edit`}
+            className="text-sm px-4 py-2 bg-zinc-200 text-zinc-600 rounded hover:bg-zinc-300 hover:text-zinc-600"
+          >
+            Edit Course
+          </Link>
+          <Link
+            href={`/dashboard/courses/${course.id}/units/new`}
+            className="text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            + Add Unit
+          </Link>
+        </div>
       </div>
 
-      <p className="text-zinc-600 mb-2">{course.description}</p>
+      <p className="text-sm text-zinc-500 mb-4">
+        Description: <strong>{course.description}</strong>
+      </p>
 
-      <div className="space-y-1 text-sm text-zinc-500">
+      <div className="space-y-5 text-sm text-zinc-500">
         <p>
-          <strong>Slug:</strong> {course.slug}
+          Slug:<strong> {course.slug}</strong>
         </p>
         <p>
-          <strong>Language:</strong> {course.language}
+          Language:<strong> {course.language} </strong>
         </p>
         <p>
-          <strong>Difficulty:</strong>{" "}
-          {["", "Beginner", "Intermediate", "Advanced"][course.difficulty]}
+          Difficulty:
+          <strong>
+            {" "}
+            {["", "Beginner", "Intermediate", "Advanced"][course.difficulty]}
+          </strong>
         </p>
         <p>
-          <strong>Status:</strong>{" "}
-          {course.is_published ? (
-            <span className="text-green-600">Published</span>
-          ) : (
-            <span className="text-orange-600">Unpublished</span>
-          )}
+          Status:
+          <strong>
+            {" "}
+            {course.is_published ? (
+              <span className="text-green-600">Published</span>
+            ) : (
+              <span className="text-orange-600">Unpublished</span>
+            )}
+          </strong>
         </p>
         {course.tags?.length > 0 && (
           <p>
-            <strong>Tags:</strong> {course.tags.join(", ")}
+            Tags:<strong> {course.tags.join(", ")}</strong>
           </p>
         )}
         {course.metadata && (
           <p>
-            <strong>Metadata:</strong>{" "}
-            <code className="bg-zinc-100 px-1 py-0.5 rounded text-xs">
-              {JSON.stringify(course.metadata)}
-            </code>
+            Metadata:
+            <strong>
+              {" "}
+              <code className="bg-zinc-100 px-1 py-0.5 rounded text-xs">
+                {JSON.stringify(course.metadata)}
+              </code>
+            </strong>
           </p>
         )}
-        <p className="text-xs mt-4">
-          Created: {new Date(course.created_at).toLocaleString()}
+        <p className="text-sm mt-4">
+          Created:{" "}
+          <strong> {new Date(course.created_at).toLocaleString()} </strong>
         </p>
-        <p className="text-xs">
-          Updated: {new Date(course.updated_at).toLocaleString()}
+        <p className="text-sm">
+          Updated:{" "}
+          <strong>{new Date(course.updated_at).toLocaleString()} </strong>
         </p>
       </div>
     </div>
