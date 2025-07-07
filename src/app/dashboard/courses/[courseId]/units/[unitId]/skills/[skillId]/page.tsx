@@ -9,9 +9,9 @@ import { Unit } from "@/types/unit";
 export default async function SkillDetailPage({
   params,
 }: {
-  params: { courseId: string; unitId: string; skillId: string };
+  params: Promise<{ courseId: string; unitId: string; skillId: string }>;
 }) {
-  const { courseId, unitId, skillId } = params;
+  const { courseId, unitId, skillId } = await params; // ✅ Next.js 15 async params
 
   const skill: Skill | null = await fetchSkillById(skillId);
   const unit: Unit | null = await fetchUnitById(unitId);
@@ -19,7 +19,6 @@ export default async function SkillDetailPage({
   if (!skill || !unit) {
     notFound();
   }
-
   return (
     <div className="max-w-3xl mx-auto px-6 py-8">
       <div className="mb-6 flex justify-between items-center">
