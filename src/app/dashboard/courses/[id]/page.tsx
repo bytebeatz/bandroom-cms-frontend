@@ -1,51 +1,26 @@
+// app/dashboard/courses/[id]/page.tsx
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAuthHeaders } from "@/lib/auth";
-
-type Course = {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  language: string;
-  difficulty: number;
-  is_published: boolean;
-  tags: string[];
-  metadata: Record<string, any>;
-  created_at: string;
-  updated_at: string;
-};
-
-async function fetchCourse(id: string): Promise<Course | null> {
-  const headers = await getAuthHeaders();
-
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/courses/${id}`,
-    { headers },
-  );
-
-  if (!res.ok) return null;
-  return res.json();
-}
+import { fetchCourseById, fetchUnitsByCourseId, Course, Unit } from "@/lib/api";
 
 export default async function CourseDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const course = await fetchCourse(id);
+  const { id } = await params; // ✅ Unwrap first
+
+  const course: Course | null = await fetchCourseById(id);
+  const units: Unit[] = await fetchUnitsByCourseId(id);
 
   if (!course) {
     notFound();
   }
-
   return (
     <div className="px-6 py-8 max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-        <h1 className="text-md text-zinc-500">
-          Course: <span className="text-xl font-semibold">{course.title}</span>
-        </h1>
+        <h2 className="text-lg font-semibold mb-4">Course</h2>
+
         <div className="flex gap-2">
           <Link
             href={`/dashboard/courses/${course.id}/edit`}
@@ -61,6 +36,9 @@ export default async function CourseDetailPage({
           </Link>
         </div>
       </div>
+      <p className="text-sm text-zinc-500 mb-4">
+        Title: <strong>{course.title}</strong>
+      </p>
 
       <p className="text-sm text-zinc-500 mb-4">
         Description: <strong>{course.description}</strong>
@@ -68,32 +46,30 @@ export default async function CourseDetailPage({
 
       <div className="space-y-5 text-sm text-zinc-500">
         <p>
-          Slug:<strong> {course.slug}</strong>
+          Slug: <strong>{course.slug}</strong>
         </p>
         <p>
-          Language:<strong> {course.language} </strong>
+          Language: <strong>{course.language}</strong>
         </p>
         <p>
-          Difficulty:
+          Difficulty:{" "}
           <strong>
-            {" "}
             {["", "Beginner", "Intermediate", "Advanced"][course.difficulty]}
           </strong>
         </p>
         <p>
           Status:
           <strong>
-            {" "}
             {course.is_published ? (
-              <span className="text-green-600">Published</span>
+              <span className="text-green-600"> Published</span>
             ) : (
-              <span className="text-orange-600">Unpublished</span>
+              <span className="text-orange-600"> Unpublished</span>
             )}
           </strong>
         </p>
         {course.tags?.length > 0 && (
           <p>
-            Tags:<strong> {course.tags.join(", ")}</strong>
+            Tags: <strong>{course.tags.join(", ")}</strong>
           </p>
         )}
         {course.metadata && (
@@ -107,14 +83,50 @@ export default async function CourseDetailPage({
             </strong>
           </p>
         )}
-        <p className="text-sm mt-4">
+        <p>
           Created:{" "}
-          <strong> {new Date(course.created_at).toLocaleString()} </strong>
+          <strong>{new Date(course.created_at).toLocaleString()}</strong>
         </p>
-        <p className="text-sm">
+        <p>
           Updated:{" "}
-          <strong>{new Date(course.updated_at).toLocaleString()} </strong>
+          <strong>{new Date(course.updated_at).toLocaleString()}</strong>
         </p>
+      </div>
+
+      {/* Divider */}
+      <hr className="my-8" />
+
+      {/* Units Section */}
+      <div className="mt-8">
+        <h2 className="text-lg font-semibold mb-4">Units</h2>
+
+        {units.length === 0 ? (
+          <p className="text-sm text-zinc-500">No units created yet.</p>
+        ) : (
+          <ul className="space-y-4">
+            {units.map((unit) => (
+              <li
+                key={unit.id}
+                className="p-4 border rounded-md bg-white shadow-sm hover:shadow transition"
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="font-semibold">{unit.title}</p>
+                    <p className="text-sm text-zinc-500">
+                      {unit.description || "No description"}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/dashboard/courses/${course.id}/units/${unit.id}`}
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    View
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
