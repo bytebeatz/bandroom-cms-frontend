@@ -23,12 +23,20 @@ export default async function UnitDetailPage({
         <h1 className="text-xl font-semibold text-zinc-700">
           {unit.order_index}. {unit.title}
         </h1>
-        <Link
-          href={`/dashboard/courses/${courseId}`}
-          className="text-sm text-blue-600 hover:underline"
-        >
-          ← Back to Course
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href={`/dashboard/courses/${courseId}`}
+            className="text-sm px-4 py-2 bg-zinc-200 text-zinc-600 rounded hover:bg-zinc-300 hover:text-zinc-600"
+          >
+            Back to Course
+          </Link>
+          <Link
+            href={`/dashboard/courses/${courseId}/units/${unitId}/edit`}
+            className="text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Edit Unit
+          </Link>
+        </div>
       </div>
 
       <p className="text-zinc-600 mb-4">
