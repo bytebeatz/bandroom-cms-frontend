@@ -111,11 +111,13 @@ export async function fetchLessonsBySkillId(
   return Array.isArray(data.lessons) ? data.lessons : []; // If your API returns { lessons: [...] }
 }
 
-export async function fetchLessonById(id: string): Promise<Lesson | null> {
+export async function fetchLessonById(
+  lessonId: string,
+): Promise<Lesson | null> {
   const headers = await getAuthHeaders();
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/lessons/${id}`,
+    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/lessons/${lessonId}`,
     {
       method: "GET",
       headers,

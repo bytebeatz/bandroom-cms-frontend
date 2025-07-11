@@ -16,19 +16,21 @@ import { Course } from "@/types";
 export default async function LessonDetailPage({
   params,
 }: {
-  params: Promise<{
+  params: {
     courseId: string;
     unitId: string;
     skillId: string;
     lessonId: string;
-  }>;
+  };
 }) {
-  const { courseId, unitId, skillId, lessonId } = await params;
+  const { courseId, unitId, skillId, lessonId } = params;
 
-  const course: Course | null = await fetchCourseById(courseId);
-  const unit: Unit | null = await fetchUnitById(unitId);
-  const skill: Skill | null = await fetchSkillById(skillId);
-  const lesson: Lesson | null = await fetchLessonById(lessonId);
+  const [course, unit, skill, lesson] = await Promise.all([
+    fetchCourseById(courseId),
+    fetchUnitById(unitId),
+    fetchSkillById(skillId),
+    fetchLessonById(lessonId),
+  ]);
 
   if (!course || !unit || !skill || !lesson) {
     notFound();
