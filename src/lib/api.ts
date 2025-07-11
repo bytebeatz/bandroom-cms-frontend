@@ -1,6 +1,6 @@
 // lib/api.ts
 import { getAuthHeaders } from "@/lib/auth";
-import { Course, Unit } from "@/types";
+import { Lesson, Course, Unit } from "@/types";
 
 export async function fetchCourses(): Promise<Course[]> {
   const headers = await getAuthHeaders();
@@ -83,6 +83,44 @@ export async function fetchSkillById(skillId: string): Promise<Skill | null> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/skills/${skillId}`,
     { headers },
+  );
+
+  if (!res.ok) return null;
+
+  return res.json();
+}
+
+export async function fetchLessonsBySkillId(
+  skillId: string,
+): Promise<Lesson[]> {
+  const headers = await getAuthHeaders(); // ✅ important!
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/lessons?skill_id=${skillId}`,
+    {
+      headers,
+      cache: "no-store",
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch lessons");
+  }
+
+  const data = await res.json();
+  return Array.isArray(data.lessons) ? data.lessons : []; // If your API returns { lessons: [...] }
+}
+
+export async function fetchLessonById(id: string): Promise<Lesson | null> {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_CMS_BACKEND_API}/api/lessons/${id}`,
+    {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    },
   );
 
   if (!res.ok) return null;
