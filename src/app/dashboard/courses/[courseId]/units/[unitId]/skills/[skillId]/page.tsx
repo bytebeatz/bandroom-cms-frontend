@@ -61,9 +61,6 @@ export default async function SkillDetailPage({
 
       <div className="text-zinc-600 space-y-4">
         <p>
-          <strong>Description:</strong> {skill.description || "No description"}
-        </p>
-        <p>
           <strong>Difficulty:</strong> {skill.difficulty}
         </p>
         <p>

@@ -62,6 +62,10 @@ export default async function LessonDetailPage({
 
       <div className="space-y-4 text-zinc-700">
         <p>
+          <strong>Description:</strong> {lesson.description}
+        </p>
+
+        <p>
           <strong>Slug:</strong> {lesson.slug}
         </p>
         <p>
