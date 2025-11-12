@@ -22,6 +22,8 @@ export default async function UnitDetailPage({
 
   return (
     <div className="px-6 py-8 max-w-4xl mx-auto">
+      <h1 className="font-semibold">UNITS</h1>
+
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-semibold text-zinc-700">
           {unit.order_index}. {unit.title}

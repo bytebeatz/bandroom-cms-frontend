@@ -38,6 +38,7 @@ export default async function LessonDetailPage({
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
+      <h1 className="font-bold">LESSON</h1>
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-zinc-800">{lesson.title}</h1>
         <p className="text-sm text-zinc-500 mt-1">

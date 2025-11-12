@@ -29,6 +29,7 @@ export default async function SkillDetailPage({
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-8">
+      <h1 className="font-bold">SKILLS</h1>
       <div className="mb-6 flex justify-between items-center">
         <div>
           <h1 className="text-xl font-semibold text-zinc-700 flex items-center gap-2">
